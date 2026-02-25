@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Focus Sorter Web</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app-container">
+        <header>
+            <h1>Focus Sorter</h1>
+            <div id="stats"><span id="count-remaining">0</span> bookmarks remaining</div>
+        </header>
+        <main id="triage-area">
+            <div class="card" id="card">
+                <div class="favicon-wrapper"><img id="bookmark-icon" src="" alt=""></div>
+                <h2 id="bookmark-title">Connecting to Extension...</h2>
+                <p id="bookmark-url"></p>
+                <div id="tag-suggestions"></div>
+            </div>
+        </main>
+        <section id="actions">
+            <button class="btn-secondary" id="skip-btn">Skip</button>
+            <button class="btn-primary" id="confirm-btn">Confirm & File</button>
+        </section>
+        <footer><div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div></footer>
+    </div>
+    <script src="web-script.js"></script>
+</body>
+</html>
