@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup - Sifted</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+
+<body class="setup-page dark-theme">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <header class="glass-header">
+        <a href="index.html" class="logo">Sifted</a>
+        <nav>
+            <a href="dashboard.html" class="btn btn-primary">Go to Dashboard</a>
+        </nav>
+    </header>
+
+    <main class="auth-container">
+        <div class="glass-card auth-card text-center" style="max-width: 500px;">
+            <h2>Install the Extension</h2>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Sifted works by capturing your bookmarks in the
+                background. Install the Chrome extension to get started.</p>
+
+            <a href="#" class="btn btn-primary btn-large mb-4" id="download-ext">Download Extension Source</a>
+            <p id="handshake-status" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);"></p>
+        </div>
+    </main>
+
+    <script src="js/supabase-config.js"></script>
+    <script src="js/setup.js"></script>
+</body>
+
+</html>

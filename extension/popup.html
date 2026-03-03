@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            width: 250px;
+            padding: 15px;
+            background-color: #0f172a;
+            color: #f8fafc;
+            margin: 0;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #a5b4fc;
+        }
+
+        p {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .status-red {
+            background-color: #ef4444;
+        }
+
+        .status-green {
+            background-color: #10b981;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin-top: 15px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Sifted Sensor</h2>
+
+    <div style="margin-top: 15px; margin-bottom: 10px;">
+        <span id="status-dot" class="status-indicator status-red"></span>
+        <span id="status-text" style="font-size: 14px; font-weight: bold;">Disconnected</span>
+    </div>
+
+    <p id="user-info">Please log in via the web dashboard to sync your session.</p>
+
+    <a href="http://localhost:8000/login.html" target="_blank" class="btn" id="login-btn">
+        Re-authenticate
+    </a>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>
