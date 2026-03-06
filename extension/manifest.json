@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Sifted - Background Capture",
+  "name": "Sifted - Bookmark Capture",
   "version": "1.0",
   "description": "Automatically capture bookmarks added to 'To Sort' and send them to your Sifted repository.",
   "permissions": [
@@ -28,7 +28,7 @@
   },
   "externally_connectable": {
     "matches": [
-      "*://localhost/*"
+      "*://notdragnius.github.io/*"
     ]
   }
 }

@@ -10,13 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
             statusText.textContent = 'Connected';
             userInfo.textContent = `Logged in as: ${data.email || 'User'}`;
             loginBtn.textContent = 'Go to Dashboard';
-            loginBtn.href = "http://localhost:8000/dashboard.html"; // Replace with deployed URL
+            loginBtn.href = "https://notdragnius.github.io/bookmark-organizer/#dashboard";
         } else {
             statusDot.className = 'status-indicator status-red';
             statusText.textContent = 'Disconnected';
             userInfo.textContent = 'Log in via the web dashboard to sync your session.';
             loginBtn.textContent = 'Log In';
-            loginBtn.href = "http://localhost:8000/login.html"; // Replace with deployed URL
+            loginBtn.href = "https://notdragnius.github.io/bookmark-organizer/#login";
         }
     });
 });

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sifted - AI Bookmark Triage</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body class="dark-theme">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <header class="glass-header">
+        <a href="#landing" class="logo">Sifted</a>
+        <nav class="guest-nav">
+            <a href="#login" class="btn btn-secondary">Log In</a>
+            <a href="#signup" class="btn btn-primary">Get Started</a>
+        </nav>
+        <nav class="auth-nav">
+            <a href="#dashboard" class="btn btn-secondary">Triage Queue</a>
+            <a href="#gallery" class="btn btn-primary">My Library</a>
+            <button id="logout-btn" class="btn btn-secondary">Log Out</button>
+        </nav>
+    </header>
+
+    <!-- Landing Page -->
+    <main id="landing" class="page-section hero">
+        <div class="hero-content">
+            <h1 class="gradient-text">Tame Your Tabs. <br>Supercharge Your Brain.</h1>
+            <p>The AI-powered, ADHD-friendly bookmark repository. Automatically capture, organize, and summarize your
+                links without breaking your flow.</p>
+            <div class="cta-group">
+                <a href="#signup" id="landing-cta" class="btn btn-primary btn-large">Start Triaging Now</a>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="glass-card mockup-card">
+                <div class="mockup-header">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                </div>
+                <div class="mockup-body">
+                    <h3>AI Summary</h3>
+                    <p class="skeleton-text"></p>
+                    <p class="skeleton-text short"></p>
+                    <div class="tags">
+                        <span class="tag">Productivity</span>
+                        <span class="tag">AI</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Login Page -->
+    <main id="login" class="page-section auth-container">
+        <div class="glass-card auth-card">
+            <h2>Log In to Triage</h2>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" class="input-field" required>
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" class="input-field" required>
+                </div>
+                <div id="login-error" class="error-message"></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Log In</button>
+            </form>
+            <p class="auth-links">Don't have an account? <a href="#signup">Sign up</a></p>
+        </div>
+    </main>
+
+    <!-- Sign Up Page -->
+    <main id="signup" class="page-section auth-container">
+        <div class="glass-card auth-card">
+            <h2>Join Sifted</h2>
+            <form id="signup-form">
+                <div class="input-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" class="input-field" required>
+                </div>
+                <div class="input-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" class="input-field" required>
+                </div>
+                <div id="signup-error" class="error-message"></div>
+                <div id="signup-success" class="success-message"></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Sign Up</button>
+            </form>
+            <p class="auth-links">Already have an account? <a href="#login">Log in</a></p>
+        </div>
+    </main>
+
+    <!-- Setup Page -->
+    <main id="setup" class="page-section auth-container">
+        <div class="glass-card auth-card text-center" style="max-width: 500px;">
+            <h2>Install the Extension</h2>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Sifted works by capturing your bookmarks in the
+                background. Install the Chrome extension to get started.</p>
+
+            <button class="btn btn-primary btn-large mb-4" id="download-ext">Download Extension Source</button>
+            <p id="handshake-status" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);"></p>
+        </div>
+    </main>
+
+    <!-- Dashboard Page -->
+    <main id="dashboard" class="page-section dashboard-container">
+        <div id="dash-loading" class="text-center" style="margin-top: 100px;">Loading bookmarks...</div>
+
+        <div id="dash-empty-state" class="text-center" style="display: none; margin-top: 100px;">
+            <div class="glass-card" style="margin: 0 auto; max-width: 400px; padding: 3rem;">
+                <h2 style="margin-bottom: 1rem;">You're all caught up!</h2>
+                <p style="color: var(--text-muted);">No more bookmarks to triage right now. Go browse the web!</p>
+            </div>
+        </div>
+
+        <div id="triage-card" class="glass-card triage-card" style="display: none;">
+            <div class="card-header">
+                <a href="#" id="b-url" target="_blank" class="bookmark-link">
+                    <div class="title-row">
+                        <img id="b-icon" src="" class="bookmark-icon" style="display: none;" alt="Icon">
+                        <h2 id="b-title" style="margin: 0;">Bookmark Title</h2>
+                    </div>
+                </a>
+                <span id="b-date" class="date-badge"></span>
+            </div>
+
+            <div class="card-body">
+                <div class="input-group">
+                    <label for="b-summary">AI Summary (Editable)</label>
+                    <textarea id="b-summary" class="input-field" rows="3"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label>Tags</label>
+                    <div id="preset-tags" class="tags-editor mb-4"
+                        style="border-bottom: 1px solid var(--surface-border); padding-bottom: 0.5rem;">
+                        <!-- Preset tags will be loaded here -->
+                    </div>
+                    <div id="b-tags" class="tags-editor">
+                        <!-- Tags inserted here -->
+                    </div>
+                    <input type="text" id="add-tag" class="input-field mt-2" placeholder="Add custom tag + Enter">
+                </div>
+            </div>
+
+            <div class="card-actions">
+                <button id="btn-skip" class="btn btn-secondary action-btn">Skip</button>
+                <button id="btn-post" class="btn btn-secondary action-btn" title="Post to Community">Share Post</button>
+                <button id="btn-confirm" class="btn btn-primary action-btn">Confirm & Save</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Gallery Page -->
+    <main id="gallery" class="page-section gallery-container" style="padding: 100px 5% 50px 5%;">
+        <div class="gallery-header"
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2>My Library</h2>
+            <div class="search-box">
+                <input type="text" id="search-input" class="input-field" placeholder="Search titles or tags..."
+                    style="width: 300px; padding: 0.5rem 1rem;">
+            </div>
+        </div>
+
+        <div id="gallery-loading" class="text-center">Loading library...</div>
+
+        <div id="gallery-empty-state" class="text-center" style="display: none; padding: 3rem;">
+            <p style="color: var(--text-muted);">No sorted bookmarks yet. Go triage your queue!</p>
+        </div>
+
+        <div id="bookmarks-grid" class="bookmarks-grid">
+            <!-- Bookmark cards injected here -->
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
