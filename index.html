@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sifted - AI Bookmark Triage</title>
     <link rel="icon" type="image/png" href="icon.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=11">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -18,14 +18,18 @@
     <div class="blob blob-2"></div>
 
     <header class="glass-header">
-        <a href="#landing" class="logo">Sifted</a>
+        <a href="#landing" class="logo" onclick="event.preventDefault(); window.location.hash='#landing';">Sifted</a>
         <nav class="guest-nav">
-            <a href="#login" class="btn btn-secondary">Log In</a>
-            <a href="#signup" class="btn btn-primary">Get Started</a>
+            <a href="#login" class="btn btn-secondary"
+                onclick="event.preventDefault(); window.location.hash='#login';">Log In</a>
+            <a href="#signup" class="btn btn-primary"
+                onclick="event.preventDefault(); window.location.hash='#signup';">Get Started</a>
         </nav>
         <nav class="auth-nav">
-            <a href="#dashboard" class="btn btn-secondary">Triage Queue</a>
-            <a href="#gallery" class="btn btn-primary">My Library</a>
+            <a href="#dashboard" class="btn btn-secondary"
+                onclick="event.preventDefault(); window.location.hash='#dashboard';">Triage Queue</a>
+            <a href="#gallery" class="btn btn-primary"
+                onclick="event.preventDefault(); window.location.hash='#gallery';">My Library</a>
             <button id="logout-btn" class="btn btn-secondary">Log Out</button>
         </nav>
     </header>
@@ -33,9 +37,22 @@
     <!-- Landing Page -->
     <main id="landing" class="page-section hero">
         <div class="hero-content">
-            <h1 class="gradient-text">Tame Your Tabs. <br>Supercharge Your Brain.</h1>
-            <p>The AI-powered, ADHD-friendly bookmark repository. Automatically capture, organize, and summarize your
-                links without breaking your flow.</p>
+            <h1 class="gradient-text">Built for Curious Minds, <br>Not Endless Tabs.</h1>
+            <p style="font-size: 1.5rem; color: var(--text-main); margin-bottom: 2rem; font-weight: 600;">Save Now. Sort Never.</p>
+            <div class="hero-features mb-4">
+                <div class="feature-item">
+                    <span class="feature-icon">⚡</span>
+                    <p><strong>Capture:</strong> Links saved instantly.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🗂️</span>
+                    <p><strong>Organize:</strong> Auto-sorted folders.</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">✨</span>
+                    <p><strong>Summarize:</strong> Get the gist in seconds.</p>
+                </div>
+            </div>
             <div class="cta-group">
                 <a href="#signup" id="landing-cta" class="btn btn-primary btn-large">Start Triaging Now</a>
             </div>
@@ -109,56 +126,75 @@
             <p style="color: var(--text-muted); margin-bottom: 2rem;">Sifted works by capturing your bookmarks in the
                 background. Install the Chrome extension to get started.</p>
 
-            <button class="btn btn-primary btn-large mb-4" id="download-ext">Download Extension Source</button>
+            <a href="https://chromewebstore.google.com/detail/sifted-bookmark-capture/ommndcnakojibleglaeojimcmekfppeb"
+                target="_blank" class="btn btn-primary btn-large mb-4" id="download-ext">Get the Extension on Chrome Web
+                Store</a>
             <p id="handshake-status" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);"></p>
         </div>
     </main>
 
     <!-- Dashboard Page -->
     <main id="dashboard" class="page-section dashboard-container">
-        <div id="dash-loading" class="text-center" style="margin-top: 100px;">Loading bookmarks...</div>
+        <div id="dash-loading" class="text-center" style="margin-top: 100px; width: 100%;">Loading bookmarks...</div>
 
-        <div id="dash-empty-state" class="text-center" style="display: none; margin-top: 100px;">
-            <div class="glass-card" style="margin: 0 auto; max-width: 400px; padding: 3rem;">
+        <div id="dash-empty-state" class="text-center" style="display: none; margin-top: 100px; width: 100%;">
+            <div class="glass-card" style="margin: 0 auto; max-width: 400px; padding: 3rem; animation: float 6s ease-in-out infinite; border-color: rgba(16, 185, 129, 0.3); box-shadow: 0 0 30px rgba(16, 185, 129, 0.1);">
+                <h1 style="font-size: 4rem; margin-bottom: 1rem; text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);">✨</h1>
                 <h2 style="margin-bottom: 1rem;">You're all caught up!</h2>
-                <p style="color: var(--text-muted);">No more bookmarks to triage right now. Go browse the web!</p>
+                <p style="color: var(--text-muted);">No more bookmarks to triage right now. Your queue is clean.</p>
             </div>
         </div>
 
-        <div id="triage-card" class="glass-card triage-card" style="display: none;">
-            <div class="card-header">
-                <a href="#" id="b-url" target="_blank" class="bookmark-link">
-                    <div class="title-row">
-                        <img id="b-icon" src="" class="bookmark-icon" style="display: none;" alt="Icon">
-                        <h2 id="b-title" style="margin: 0;">Bookmark Title</h2>
-                    </div>
-                </a>
-                <span id="b-date" class="date-badge"></span>
-            </div>
-
-            <div class="card-body">
-                <div class="input-group">
-                    <label for="b-summary">AI Summary (Editable)</label>
-                    <textarea id="b-summary" class="input-field" rows="3"></textarea>
+        <div class="dashboard-layout" id="dashboard-content" style="display: none; position: relative;">
+            <button id="toggle-sidebar" class="btn btn-secondary sidebar-toggle-btn">
+                <span id="toggle-sidebar-icon">◨</span> Queue
+            </button>
+            <div id="triage-card" class="glass-card triage-card">
+                <div class="card-header">
+                    <a href="#" id="b-url" target="_blank" class="bookmark-link">
+                        <div class="title-row">
+                            <img id="b-icon" src="" class="bookmark-icon" style="display: none;" alt="Icon">
+                            <h2 id="b-title" style="margin: 0; font-size: 1.5rem; line-height: 1.3;">Bookmark Title</h2>
+                        </div>
+                    </a>
+                    <span id="b-date" class="date-badge"></span>
                 </div>
 
-                <div class="input-group">
-                    <label>Tags</label>
-                    <div id="preset-tags" class="tags-editor mb-4"
-                        style="border-bottom: 1px solid var(--surface-border); padding-bottom: 0.5rem;">
-                        <!-- Preset tags will be loaded here -->
+                <div class="card-body">
+                    <div class="input-group">
+                        <label for="b-summary">AI Summary (Editable)</label>
+                        <textarea id="b-summary" class="input-field" rows="3"></textarea>
                     </div>
-                    <div id="b-tags" class="tags-editor">
-                        <!-- Tags inserted here -->
+
+                    <div class="input-group">
+                        <label>Tags</label>
+                        <div id="preset-tags" class="tags-editor mb-4"
+                            style="border-bottom: 1px solid var(--surface-border); padding-bottom: 0.5rem;">
+                            <!-- Preset tags will be loaded here -->
+                        </div>
+                        <div id="b-tags" class="tags-editor">
+                            <!-- Tags inserted here -->
+                        </div>
+                        <input type="text" id="add-tag" class="input-field mt-2" placeholder="Add custom tag + Enter">
                     </div>
-                    <input type="text" id="add-tag" class="input-field mt-2" placeholder="Add custom tag + Enter">
+                </div>
+
+                <div class="card-actions">
+                    <button id="btn-skip" class="btn btn-secondary action-btn">Skip</button>
+                    <button id="btn-post" class="btn btn-secondary action-btn" title="Post to Community">Share Post</button>
+                    <button id="btn-confirm" class="btn btn-primary action-btn">Confirm & Save</button>
                 </div>
             </div>
 
-            <div class="card-actions">
-                <button id="btn-skip" class="btn btn-secondary action-btn">Skip</button>
-                <button id="btn-post" class="btn btn-secondary action-btn" title="Post to Community">Share Post</button>
-                <button id="btn-confirm" class="btn btn-primary action-btn">Confirm & Save</button>
+            <!-- The Upcoming Queue Sidebar -->
+            <div class="queue-sidebar" id="queue-sidebar">
+                <div class="sidebar-header">
+                    <h3>Up Next</h3>
+                    <span class="queue-count" id="queue-count">0 items</span>
+                </div>
+                <div class="upcoming-list" id="upcoming-list">
+                    <!-- Upcoming items injected here via JS -->
+                </div>
             </div>
         </div>
     </main>
@@ -185,7 +221,7 @@
         </div>
     </main>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=11"></script>
 </body>
 
 </html>
