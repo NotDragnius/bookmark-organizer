@@ -17,7 +17,7 @@ function checkAuth() {
     if (userJson) {
         currentUser = JSON.parse(userJson);
         document.body.classList.add('logged-in');
-        
+
         // Update landing CTA if user is logged in
         const ctaBtn = document.getElementById('landing-cta');
         if (ctaBtn) {
@@ -28,7 +28,7 @@ function checkAuth() {
     } else {
         currentUser = null;
         document.body.classList.remove('logged-in');
-        
+
         const ctaBtn = document.getElementById('landing-cta');
         if (ctaBtn) {
             ctaBtn.textContent = 'Start Triaging Now';
@@ -42,7 +42,7 @@ function checkAuth() {
 // --- SPA ROUTER ---
 const router = () => {
     let hash = window.location.hash || '#landing';
-    
+
     // Auth guards
     const isAuth = checkAuth();
     if (!isAuth && ['#dashboard', '#gallery', '#setup'].includes(hash)) {
@@ -215,7 +215,7 @@ function initSetup() {
                     statusText.textContent = "Extension not found or failed to connect.";
                 } else if (response && response.success) {
                     statusText.textContent = "Extension connected successfully! Redirecting...";
-                    statusText.style.color = "#10b981"; 
+                    statusText.style.color = "#10b981";
                     setTimeout(() => {
                         window.location.hash = '#dashboard';
                     }, 1500);
@@ -244,7 +244,7 @@ function initDashboard() {
 
 let dashEventsSetup = false;
 function setupDashboardEvents() {
-    if(dashEventsSetup) return;
+    if (dashEventsSetup) return;
     dashEventsSetup = true;
 
     const tagInput = document.getElementById('add-tag');
@@ -294,7 +294,7 @@ function setupDashboardEvents() {
         const updatedTags = currentBookmark.tags || [];
 
         const item = dashQueue.shift();
-        dashShowNext(); 
+        dashShowNext();
 
         await supabaseClient.from('bookmarks').update({ status: 'sorted', ai_summary: updatedSummary, tags: updatedTags }).eq('id', item.id);
 
@@ -313,7 +313,7 @@ function setupDashboardEvents() {
 
 function setupPresetTags() {
     const presetTagsEl = document.getElementById('preset-tags');
-    if(presetTagsEl.children.length > 0) return; // already populated
+    if (presetTagsEl.children.length > 0) return; // already populated
 
     const presetTags = ['Video', 'Article', 'Tutorial', 'Game', 'Idea', 'Tool', 'Inspiration'];
     presetTags.forEach((tag) => {
@@ -395,7 +395,7 @@ function dashShowNext() {
     let domain = '';
     try { domain = new URL(currentBookmark.url).hostname; } catch (e) { }
     const iconUrl = domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=64` : '';
-    
+
     if (iconUrl) {
         uiIcon.src = iconUrl;
         uiIcon.style.display = 'block';
@@ -409,14 +409,14 @@ function dashShowNext() {
     emptyStateEl.style.display = 'none';
     cardEl.style.display = 'flex';
     document.getElementById('dashboard-content').style.display = 'flex'; // Use wrapper now
-    
+
     document.body.classList.add('focus-mode');
     setTimeout(() => { document.body.classList.add('active'); }, 50);
 }
 
 async function generateAiMetadata(url, title) {
     const uiSummary = document.getElementById('b-summary');
-    
+
     // Set loading state
     uiSummary.value = "✨ AI is analyzing this bookmark...";
     uiSummary.classList.add('ai-loading');
@@ -424,11 +424,11 @@ async function generateAiMetadata(url, title) {
     const prompt = `Analyze this bookmark: Title: "${title}", URL: "${url}". 
     1. Provide a VERY short, concise, and punchy summary (maximum 15 words). 
     2. Provide a comma-separated list of 2-4 highly relevant tags. 
-    IMPORTANT: You must heavily favor using these predefined categories if applicable: [Video, Article, Tutorial, Game, Idea, Tool, Inspiration]. 
+    IMPORTANT: You should include 1-2 relevant predefined categories [Video, Article, Tutorial, Game, Idea, Tool, Inspiration], AND invent 1-2 highly specific, short custom tags based on the topic. 
     Format as RAW JSON ONLY, absolutely no markdown wrappers: { "summary": "...", "tags": ["tag1", "tag2"] }`;
 
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -440,19 +440,19 @@ async function generateAiMetadata(url, title) {
 
         const result = await response.json();
         const text = result.candidates[0].content.parts[0].text.trim();
-        
+
         let aiData;
         try {
             // strip potential markdown block formatting just in case
             const cleanText = text.replace(/```json/g, '').replace(/```/g, '');
             aiData = JSON.parse(cleanText);
-        } catch(e) {
+        } catch (e) {
             console.error("Failed to parse Gemini JSON:", text);
             throw e;
         }
 
         uiSummary.value = aiData.summary;
-        
+
         if (aiData.tags && Array.isArray(aiData.tags)) {
             const currentTags = currentBookmark.tags || [];
             // Merge without duplicates
@@ -472,21 +472,21 @@ async function generateAiMetadata(url, title) {
 function renderQueueSidebar(queue) {
     const listEl = document.getElementById('upcoming-list');
     const countEl = document.getElementById('queue-count');
-    
+
     countEl.textContent = `${queue.length} item${queue.length !== 1 ? 's' : ''}`;
     listEl.innerHTML = '';
-    
-    if(queue.length === 0) {
+
+    if (queue.length === 0) {
         listEl.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem; text-align: center; margin-top: 1rem;">No items up next.</p>';
         return;
     }
 
     queue.forEach(item => {
         let domain = '';
-        try { domain = new URL(item.url).hostname; } catch(e) {}
+        try { domain = new URL(item.url).hostname; } catch (e) { }
         const iconUrl = domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=32` : '';
         const iconHtml = iconUrl ? `<img src="${iconUrl}" class="queue-item-icon" alt="">` : '';
-        
+
         const el = document.createElement('div');
         el.className = 'queue-item';
         el.innerHTML = `
@@ -526,7 +526,7 @@ function initGallery() {
 
 let galleryEventsSetup = false;
 function setupGalleryEvents() {
-    if(galleryEventsSetup) return;
+    if (galleryEventsSetup) return;
     galleryEventsSetup = true;
 
     const searchInput = document.getElementById('search-input');
